@@ -1,0 +1,123 @@
+n = int(input())
+
+matrix = []
+for _ in range(n):
+    matrix.append(list(input()))
+
+knights = {}
+
+
+def is_inside(r, c):
+    if 0 <= r < n and 0 <= c < n:
+        return True
+    return False
+
+
+def add_knight(p):
+    if p not in knights:
+        knights[p] = 0
+    knights[p] += 1
+
+
+def possible_attack(r, c):
+    position = str(r) + " " + str(c)
+    if is_inside(r - 1, c - 2):
+        if matrix[r - 1][c - 2] == "K":
+            add_knight(position)
+    if is_inside(r - 2, c - 1):
+        if matrix[r - 2][c - 1] == "K":
+            add_knight(position)
+    if is_inside(r - 2, c + 1):
+        if matrix[r - 2][c + 1] == "K":
+            add_knight(position)
+    if is_inside(r - 1, c + 2):
+        if matrix[r - 1][c + 2] == "K":
+            add_knight(position)
+    if is_inside(r + 1, c + 2):
+        if matrix[r + 1][c + 2] == "K":
+            add_knight(position)
+    if is_inside(r + 2, c + 1):
+        if matrix[r + 2][c + 1] == "K":
+            add_knight(position)
+    if is_inside(r + 2, c - 1):
+        if matrix[r + 2][c - 1] == "K":
+            add_knight(position)
+    if is_inside(r + 1, c - 2):
+        if matrix[r + 1][c - 2] == "K":
+            add_knight(position)
+
+
+knights_removed = 0
+while True:
+    for i in range(n):
+        for j in range(n):
+            if matrix[i][j] == "K":
+                possible_attack(i, j)
+    if knights:
+        max_attacks = max(knights, key=lambda x: knights[x])
+        row_remove, col_remove = [int(x) for x in max_attacks.split()]
+        matrix[row_remove][col_remove] = "0"
+        knights_removed += 1
+    else:
+        break
+    knights = {}
+
+print(knights_removed)
+
+# with queue
+# from collections import deque
+#
+#
+# def is_point_in_board(x, y):
+#     if 0 <= x < board_size and \
+#             0 <= y < board_size:
+#         return True
+#     else:
+#         return False
+#
+#
+# def is_knight(x, y):
+#     if is_point_in_board(x, y) and board[x][y] == 'K':
+#         return True
+#     else:
+#         return False
+#
+#
+# def make_power_for_knight(x, y):
+#     if is_knight(x, y):
+#         return 1
+#     else:
+#         return 0
+#
+#
+# board_size = int(input())
+# board = deque()
+# moves = 0
+#
+# knight_moves = ((1, -2), (2, -1), (1, 2), (2, 1),
+#                 (-1, 2), (-2, 1), (-1, -2), (-2, -1))
+#
+# for _ in range(board_size):
+#     line = input()
+#     board.append([x for x in line])
+#
+# while True:
+#     powerful_knight_coordinates = [0]
+#     for row in range(board_size):
+#         for cow in range(board_size):
+#             current_knight_power = 0
+#             if board[row][cow] == 'K':
+#                 for x, y in knight_moves:
+#                     current_knight_power += make_power_for_knight(row + x, cow + y)
+#
+#                 if current_knight_power > powerful_knight_coordinates[0]:
+#                     powerful_knight_coordinates = [current_knight_power, row, cow]
+#                 elif current_knight_power == 0:
+#                     board[row][cow] = '0'
+#     if len(powerful_knight_coordinates) == 1:
+#         break
+#     else:
+#         board[powerful_knight_coordinates[1]][powerful_knight_coordinates[2]] = 0
+#         moves += 1
+#
+# print(moves)
